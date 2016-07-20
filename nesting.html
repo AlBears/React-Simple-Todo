@@ -7,6 +7,16 @@
 	<script src="https://fb.me/react-15.0.1.js"></script>
 	<script src="https://fb.me/react-dom-15.0.1.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.25/browser.js"></script>
+	<style>
+		body {
+			margin-top: 30px;
+		}
+		a.delete {
+			color: red;
+		}
+	</style>
+
+
 </head>
 <body>
 	<div class="container">
@@ -41,7 +51,7 @@
 				return(
 					<div>
 						<TodoForm onTodoAdd={this.handleTodoAdd}/>
-						<TodoList todos={this.state.todos}/>
+						<TodoList todos={this.state.todos} deleteTodo={this.handleTodoDelete}/>
 					</div>
 					)
 			},
@@ -51,6 +61,15 @@
 					text: text
 				}
 				this.setState({todos:this.state.todos.concat(newTodo)});
+			},
+			handleTodoDelete: function(todo){
+				var todos = this.state.todos;
+				for(var i = 0; i < todos.length; i++){
+					if(todos[i].id == todo.id){
+						todos.splice(i, 1);
+					}
+				}
+				this.setState({todos:todos});
 			}
 			
 		});
@@ -90,12 +109,15 @@
 					<ul className="list-group">
 						{
 							this.props.todos.map(todo => {
-								return <li className="list-group-item" todo={todo} key={todo.id}>{todo.text}</li>
+								return <li className="list-group-item" todo={todo} key={todo.id}>{todo.text} <a onClick={this.onDelete.bind(this, todo)} className="delete" href="#">x</a></li>
 							})
 						}
 					</ul>
 					)
 			},
+			onDelete: function(todo){
+				this.props.deleteTodo(todo);
+			}
 			
 		});
 
